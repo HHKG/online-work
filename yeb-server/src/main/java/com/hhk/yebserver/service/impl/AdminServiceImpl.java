@@ -2,23 +2,29 @@ package com.hhk.yebserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hhk.yebserver.config.security.JwtTokenUtil;
+import com.hhk.yebserver.mapper.AdminRoleMapper;
 import com.hhk.yebserver.pojo.Admin;
 import com.hhk.yebserver.mapper.AdminMapper;
+import com.hhk.yebserver.pojo.AdminRole;
 import com.hhk.yebserver.pojo.RespBean;
 import com.hhk.yebserver.service.IAdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hhk.yebserver.utils.AdminUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +46,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Autowired
     private AdminMapper adminMapper;
     @Autowired
+    private AdminRoleMapper adminRoleMapper;
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Value("${jwt.tokenHead}")
@@ -56,9 +64,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public RespBean login(String username, String password, String code, HttpServletRequest request) {
         // 从session中获取验证码
-        String captcha=(String) request.getSession().getAttribute("captcha");
-
-         if(StringUtils.isEmpty(code)||!captcha.equalsIgnoreCase(code)){
+        String captcha = (String) request.getSession().getAttribute("captcha");
+        System.out.println(request.getSession().getAttribute("captcha") + ")))))))))))))))");
+        System.out.println(captcha + "===============");
+        if(org.apache.commons.lang3.StringUtils.isBlank(captcha)){
+            throw new RuntimeException("captcha cannot be null");
+        }
+         if(StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)){
              return RespBean.error("验证码输入错误，请重新输入！");
          }
         // 获取userDetail
@@ -91,6 +103,50 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public Admin getAdminByUserName(String username) {
         return adminMapper.selectOne(new QueryWrapper<Admin>().eq("username",username).eq("enabled",true));
+    }
+
+    /**
+     * 获取所有操作员
+     * @param keywords
+     * @return
+     */
+    @Override
+    public List<Admin> getAllAdmins(String keywords) {
+       return baseMapper.getAllAdmins(AdminUtils.getCurrentAdmin().getId(),keywords);
+    }
+
+    /**
+     * 更新操作员角色
+     * @param adminId
+     * @param rids
+     * @return
+     */
+    @Override
+    @Transactional //开启事务
+    public RespBean addAdminRole(Integer adminId, Integer[] rids) {
+        // 先删除全部，后调用方法重新全部添加
+        adminRoleMapper.delete(new QueryWrapper<AdminRole>().eq("adminId",adminId));
+        Integer result= adminRoleMapper.addAdminRole(adminId,rids);
+        if(rids.length == result){
+            return RespBean.success("更新成功！");
+        }
+        return RespBean.error("更新失败！");
+    }
+
+    @Override
+    public RespBean updateAdminPassword(String oldPass, String pass, Integer adminId) {
+        Admin admin = baseMapper.selectById(adminId);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // 对比密码，判断旧密码是否正确
+        if(encoder.matches(oldPass,admin.getPassword())){
+            // 对比成功，设置密码，并加密
+            admin.setPassword(encoder.encode(pass));
+            int result = baseMapper.updateById(admin);
+            if(result == 1){
+                return RespBean.success("更新成功！");
+            }
+        }
+        return RespBean.error("更新失败！");
     }
 
 }

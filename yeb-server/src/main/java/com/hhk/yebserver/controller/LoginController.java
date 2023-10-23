@@ -7,6 +7,7 @@ import com.hhk.yebserver.service.IAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,13 @@ import java.security.Principal;
 public class LoginController {
     @Autowired
     private IAdminService adminService;
+
     @ApiOperation(value="登录之后返回token")
     @PostMapping("/login")
     public RespBean login(@RequestBody AdminLoginParam adminLoginParam, HttpServletRequest request){
+        System.out.println(request.getSession().getAttribute("captcha"));
+        System.out.println(request.getSession().toString());
+        System.out.println(adminLoginParam.toString()+"---------------------------");
         return adminService.login(adminLoginParam.getUsername(),adminLoginParam.getPassword(),adminLoginParam.getCode(),request);
     }
 
