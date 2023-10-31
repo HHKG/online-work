@@ -7,12 +7,13 @@ import com.hhk.yebserver.service.IAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
@@ -21,6 +22,9 @@ import java.security.Principal;
 public class LoginController {
     @Autowired
     private IAdminService adminService;
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @ApiOperation(value="登录之后返回token")
     @PostMapping("/login")
@@ -51,7 +55,16 @@ public class LoginController {
     @ApiOperation(value = "退出登录")
     @PostMapping("/logout")
     public RespBean logout(){
-
         return RespBean.success("注销成功！");
+    }
+    @ApiOperation(value = "用户注册")
+    @PostMapping("/register")
+    public RespBean registerUser(@RequestBody String username,String password,String phone){
+        Admin admin = new Admin();
+        admin.setUsername(username);
+        admin.setPhone(phone);
+        admin.setPassword(passwordEncoder.encode(password));
+        adminService.save(admin);
+        return RespBean.success("注册成功",admin);
     }
 }
