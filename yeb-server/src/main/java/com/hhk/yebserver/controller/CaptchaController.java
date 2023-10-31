@@ -21,6 +21,7 @@ public class CaptchaController {
 
     @Autowired
     private DefaultKaptcha defaultKaptcha;
+
     @ApiOperation(value = "验证码")
     @GetMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response){

@@ -39,5 +39,67 @@
     <sql id="Base_Column_List">
         id, name, gender, birthday, idCard, wedlock, nationId, nativePlace, politicId, email, phone, address, departmentId, jobLevelId, posId, engageForm, tiptopDegree, specialty, school, beginDate, workState, workID, contractTerm, conversionTime, notWorkDate, beginContract, endContract, workAge, salaryId
     </sql>
+    <resultMap id="EmployeeInfo" type="com.hhk.yebserver.pojo.Employee" extends="BaseResultMap">
+    <!--    Property = "nation" 对象    -->
+        <association property="nation" javaType="com.hhk.yebserver.pojo.Nation">
+            <id column="nid" property="id"/>
+            <result column="nname" property="name"/>
+         </association>
+        <association property="politicsStatus" javaType="com.hhk.yebserver.pojo.PoliticsStatus">
+            <id column="pid" property="id" />
+            <result column="pname" property="name"/>
+        </association>
+        <association property="department" javaType="com.hhk.yebserver.pojo.Department">
+            <id column="did" property="id"/>
+            <result column="dname" property="name"/>
+        </association>
+        <association property="jobLevel" javaType="com.hhk.yebserver.pojo.Joblevel">
+            <id column="jid" property="id"/>
+            <result column="jname" property="name"/>
+        </association>
+        <association property="position" javaType="com.hhk.yebserver.pojo.Position">
+            <id column="posid" property="id"/>
+            <result column="posname" property="name"/>
+        </association>
+    </resultMap>
+    <select id="getEmployeeByPage" resultMap="EmployeeInfo">
+        select e.*,n.id AS nid,n.name AS nname,p.id AS pid,p.name AS pname,d.id AS did,d.name AS dname,
+               j.id AS jid,j.name AS jname,pos.id AS posid,pos.name AS posname
+        from t_employee e ,t_nation n ,t_politics_status p ,t_department d ,t_joblevel j ,t_position pos
+        where e.nationId = n.id AND e.politicId = p.id AND e.departmentId = d.id AND e.jobLevelId = j.id AND
+              e.posId = pos.id
+        <if test="employee.name != null and employee.name != ''">
+            AND e.name like CONCAT('%',#{employee.name},'%')
+        </if>
+        <if test="employee.politicId != null">
+            AND e.pliticId = #{employee.politicId}
+        </if>
+        <if test="employee.nationId != null">
+            AND e.nationId = #{employee.nationId}
+        </if>
+        <if test="null!=employee.jobLevelId">
+            AND e.job_level_id =#{employee.jobLevelId}
+        </if>
+        <if test="null!=employee.posId">
+            AND e.pos_id =#{employee.posId}
+        </if>
+        <if test="null!=employee.engageForm and ''!=employee.engageForm">
+            AND e.engage_form =#{employee.engageForm}
+        </if>
+        <if test="null!=employee.departmentId">
+            AND e.department_id =#{employee.departmentId}
+        </if>
+        <!-- beginDateScope 控制器中定义的日期数组参数名 -->
+        <if test="null!=beginDateScope and 2==beginDateScope.length">
+            AND e.begin_date BETWEEN #{beginDateScope[0]} AND #{beginDateScope[1]}
+        </if>
+        ORDER BY e.id
+    </select>
+    <select id="getMaxWorkID" resultType="String">
+        select workID from t_employee;
+    </select>
+    <select id="getEmployee" resultMap="BaseResultMap">
+        select * from t_employee where id = #{id}
+    </select>
 
 </mapper>

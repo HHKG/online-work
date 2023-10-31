@@ -16,5 +16,16 @@
     <sql id="Base_Column_List">
         id, name, parentId, dePath, enabled, isParent
     </sql>
+    <select id="getAllDepartment" resultMap="BaseResultMap">
+        select * from t_department order by id;
+    </select>
+<!--  添加部门：调用存储过程CALLABLE  -->
+    <insert id="addDepartment">
+        INSERT into t_department("name","parentId","dePath","enabled") values (#{name},#{parentId},#{dePath},#{enabled})
+    </insert>
+<!--   删除部门 -->
+    <delete id="deleteDep">
+        delete FROM t_department where id = #{id};
+    </delete>
 
 </mapper>

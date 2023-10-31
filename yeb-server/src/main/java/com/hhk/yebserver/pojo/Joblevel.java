@@ -7,8 +7,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * <p>
@@ -19,6 +18,9 @@ import lombok.EqualsAndHashCode;
  * @since 2023-07-28
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_joblevel")
 @ApiModel(value="Joblevel对象", description="")
@@ -31,6 +33,7 @@ public class Joblevel implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "职称名称")
+    @NonNull
     private String name;
 
     @ApiModelProperty(value = "职称等级")

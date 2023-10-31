@@ -1,5 +1,7 @@
 package com.hhk.yebserver.pojo;
 
+import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDate;
@@ -7,8 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * <p>
@@ -19,6 +20,9 @@ import lombok.EqualsAndHashCode;
  * @since 2023-07-28
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("t_employee")
 @ApiModel(value="Employee对象", description="")
@@ -113,6 +117,30 @@ public class Employee implements Serializable {
 
     @ApiModelProperty(value = "工资帐套ID")
     private Integer salaryId;
+    @ApiModelProperty(value = "民族")
+    @TableField(exist = false)
+    @ExcelEntity(name = "民族")
+    private Nation nation;
+    @ApiModelProperty(value = "政治面貌")
+    @TableField(exist = false)
+    @ExcelEntity(name = "政治面貌")
+    private PoliticsStatus politicsStatus;
+    @ApiModelProperty(value = "部门")
+    @TableField(exist = false)
+    @ExcelEntity(name = "部门")
+    private Department department;
+    @ApiModelProperty(value = "职称")
+    @TableField(exist = false)
+    @ExcelEntity(name = "职称")
+    private Joblevel jobLevel;
+    @ApiModelProperty(value = "职位")
+    @TableField(exist = false)
+    @ExcelEntity(name = "职位")
+    private Position position;
+    @ApiModelProperty(value = "工资套餐")
+    @TableField(exist = false)
+    @ExcelEntity(name = "工资套餐")
+    private Salary salary;
 
 
 }
