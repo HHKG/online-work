@@ -9,10 +9,11 @@ import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.hhk.yebserver.pojo.Alipay;
 import com.hhk.yebserver.service.AlipayService;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Map;
-
+@Service
 public class AlipayServiceImpl implements AlipayService {
     /**
      * 创建支付宝订单

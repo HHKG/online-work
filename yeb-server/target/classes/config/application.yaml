@@ -46,7 +46,20 @@ spring:
 #        max-idle: 200
 #        #        最小空闲连接
 #        min-idle: 5
+alipay:
+  app-id: your_alipay_app_id
+  private-key: your_alipay_private_key
+  alipay-public-key: your_alipay_public_key
+  server-url: https://openapi.alipay.com/gateway.do
+  charset: utf-8
+  sign-type: RSA2
+  notify-url: http://your_domain/alipay/notify
 
+wechat:
+  app-id: your_wechat_app_id
+  mch-id: your_wechat_mch_id
+  mch-key: your_wechat_mch_key
+  notify-url: http://your_domain/wechat/notify
 
 
 

@@ -22,7 +22,7 @@
     </sql>
     <!--  返回结果集  -->
     <resultMap id="AdminWithRole" type="com.hhk.yebserver.pojo.Admin" extends="BaseResultMap">
-        <collection property="roles" ofType="com.hhk.yebserver.pojo.Role">
+        <collection property="roles" javaType="com.hhk.yebserver.pojo.Role">
             <id column="rid" property="id" />
             <result column="rname" property="name" />
             <result column="rnameZh" property="nameZh" />

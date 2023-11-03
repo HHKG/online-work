@@ -21,9 +21,6 @@
         id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
     </sql>
     <resultMap id="Menus" type="com.hhk.yebserver.pojo.Menu" extends="BaseResultMap">
-        <collection property="children" ofType="com.hhk.yebserver.pojo.Menu">
-
-        </collection>
     </resultMap>
 <!--   根据用户id获取菜单列表  -->
     <select id="getMenusByAdminId" resultMap="Menus">
@@ -57,7 +54,7 @@
             m2.id
     </select>
     <resultMap id="MenusWithRole" type="com.hhk.yebserver.pojo.Menu" extends="BaseResultMap">
-        <collection property="roles" ofType="com.hhk.yebserver.pojo.Role">
+        <collection property="roles" javaType="com.hhk.yebserver.pojo.Role">
             <id column="rid" property="id"/>
             <result column="rname" property="name"/>
             <result column="rnameZh" property="nameZh"/>
@@ -83,10 +80,10 @@
     <resultMap id="MenusWithChildren" type="com.hhk.yebserver.pojo.Menu" extends="BaseResultMap">
         <id column="id1" property="id" />
         <result column="name1" property="name" />
-        <collection property="children" ofType="com.hhk.yebserver.pojo.Menu">
+        <collection property="children" javaType="com.hhk.yebserver.pojo.Menu">
             <id column="id2" property="id" />
             <result column="name2" property="name" />
-            <collection property="children" ofType="com.hhk.yebserver.pojo.Menu">
+            <collection property="children" javaType="com.hhk.yebserver.pojo.Menu">
                 <id column="id3" property="id" />
                 <result column="name3" property="name" />
             </collection>

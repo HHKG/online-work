@@ -136,40 +136,40 @@ public class EmployeeController {
        }
     }
 
-    @ApiOperation(value = "导入员工数据")
-    @PostMapping("importEmployee")
-    public RespBean importEmployee(MultipartFile file){
-        ImportParams params = new ImportParams();
-        // 去掉标题行
-        params.setTitleRows(1);
-        List<Nation> nationList = nationService.list();
-        List<PoliticsStatus> politicsStatusList = politicsStatusService.list();
-        List<Department> departmentList = departmentService.list();
-        List<Joblevel> joblevelList = jobLevelService.list();
-        List<Position> positionList = positionService.list();
-        try {
-            List<Employee> list = ExcelImportUtil.importExcel(file.getInputStream(),Employee.class,params);
-            list.forEach(employee -> {
-                // indexOf 在字符串中寻找参数字符串第一次出现的位置，并返回该位置
-                // 民族id
-                // 获取Nation的name,通过name获取对应的下标，通过下标获取完整的对象，通过对象获取id
-                employee.setNationId(nationList.get(nationList.indexOf(new Nation(employee.getNation().getName()))).getId());
-                // 政治 id
-                employee.setPoliticId(politicsStatusList.get(politicsStatusList.indexOf(new PoliticsStatus(employee.getPoliticsStatus().getName()))).getId());
-                // 部门 id
-                employee.setDepartmentId(departmentList.get(departmentList.indexOf(new Department(employee.getDepartment().getName()))).getId());
-                // 职称 id
-                employee.setJobLevelId(joblevelList.get(joblevelList.indexOf(new Joblevel(employee.getJobLevel().getName()))).getId());
-                // 职位id
-                employee.setPosId(positionList.get(positionList.indexOf(new Position(employee.getPosition().getName()))).getId());
-            });
-            if(employeeService.saveBatch(list)){
-                return RespBean.success("导入成功！");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return RespBean.error("导入失败！");
-    }
+//    @ApiOperation(value = "导入员工数据")
+//    @PostMapping("importEmployee")
+//    public RespBean importEmployee(MultipartFile file) {
+//        ImportParams params = new ImportParams();
+//        // 去掉标题行
+//        params.setTitleRows(1);
+//        List<Nation> nationList = nationService.list();
+//        List<PoliticsStatus> politicsStatusesList = politicsStatusService.list();
+//        List<Department> departmentsList = departmentService.list();
+//        List<Joblevel> joblevelsList = jobLevelService.list();
+//        List<Position> positionsList = positionService.list();
+//        try {
+//            List<Employee> list = ExcelImportUtil.importExcel(file.getInputStream(), Employee.class, params);
+//            list.forEach(employee -> {
+//                // indexOf 在字符串中寻找参数字符串第一次出现的位置并返回该位置。
+//                // 民族 id
+//                // 获取 Nation 的 name, 通过 name 获取对应的下标，通过下标获取整完的对象，通过对象获取 id,
+//                employee.setNationId(nationList.get(nationList.indexOf(new Nation(employee.getNation().getName()))).getId());
+//                // 政治 id
+//                employee.setPoliticId(politicsStatusesList.get(politicsStatusesList.indexOf(new PoliticsStatus(employee.getPoliticsStatus().getName()))).getId());
+//                // 部门 id
+//                employee.setDepartmentId(departmentsList.get(departmentsList.indexOf(new Department(employee.getDepartment().getName()))).getId());
+//                // 职称 id
+//                employee.setJobLevelId(joblevelsList.get(joblevelsList.indexOf(new Joblevel(employee.getJobLevel().getName()))).getId());
+//                // 职位 id
+//                employee.setPosId(positionsList.get(positionsList.indexOf(new Position(employee.getPosition().getName()))).getId());
+//            });
+//            if (employeeService.saveBatch(list)) {
+//                return RespBean.success("导入成功！");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return RespBean.error("导入失败！");
+//    }
 
 }

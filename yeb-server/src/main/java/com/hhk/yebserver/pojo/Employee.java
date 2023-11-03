@@ -10,6 +10,7 @@ import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -20,12 +21,10 @@ import lombok.*;
  * @since 2023-07-28
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 @TableName("t_employee")
-@ApiModel(value="Employee对象", description="")
+@ApiModel(value="Employee对象", description="员工表")
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
